@@ -275,7 +275,7 @@ int main() {
                 // Imprimir o mapa
 				
 				printMap(map, playerRow, playerCol);
-				printf("Era espinho %d \n",wasSpike);
+				
 				
 				if (hasKey ==0 ){
 					map[keyRow][keyCol] = '@';
