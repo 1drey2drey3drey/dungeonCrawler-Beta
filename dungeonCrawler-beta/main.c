@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h> // Para a função abs()
+#include <math.h> // Para a funÃ§Ã£o abs()
 
 #define ROWS 10
 #define COLS 10
 
-// Função para exibir a lore
+// FunÃ§Ã£o para exibir a lore
 void showLore() {
     system("color 7");
 	printf("\t\t=== Lore do CESUPA ===\n\n");
@@ -17,13 +17,13 @@ void showLore() {
     printf("Ricardo Casseb, figura lendaria entre os corredores do CESUPA, era conhecido por sua rigorosidade . Seus metodos de ensino desafiavam os alunos a superarem seus proprios limites e a se dedicarem intensamente ao aprendizado.\n");
     printf("No entanto, em meio a esse ambiente desafiador, havia um aluno que se destacava pela sua genialidade e astucia: Pedrinho Girotto, conhecido como o 'Salvador da Patria'.\n");
     printf("Com sua inteligencia impar e habilidade de encontrar solucoes para os problemas mais complexos, Pedrinho tornou-se uma lenda viva entre os estudantes do CESUPA, sendo reverenciado como um verdadeiro heroi academico.\n");
-    printf("Esses personagens, envoltos em misterios e desafios, contribuiram para a construção de uma atmosfera unica no CESUPA, onde o conhecimento era valorizado como uma jornada de superação e descobertas constantes.\n");
+    printf("Esses personagens, envoltos em misterios e desafios, contribuiram para a construÃ§Ã£o de uma atmosfera unica no CESUPA, onde o conhecimento era valorizado como uma jornada de superaÃ§Ã£o e descobertas constantes.\n");
     printf("======================\n\n");
     system("pause");
     system("clear || cls"); // Limpa a tela
 }
 
-// Função para exibir o menu inicial
+// FunÃ§Ã£o para exibir o menu inicial
 void showMainMenu() {
     
 	system("color A");
@@ -37,7 +37,7 @@ void showMainMenu() {
 
 }
 
-// Função para exibir o tutorial
+// FunÃ§Ã£o para exibir o tutorial
 void showTutorial() {
     system("color F");
 	system("clear || cls"); // Limpa a tela
@@ -53,7 +53,7 @@ void showTutorial() {
     system("pause");
 }
 
-// Função para imprimir o mapa
+// FunÃ§Ã£o para imprimir o mapa
 void printMap(char map[ROWS][COLS], int playerRow, int playerCol) {
     
 	int i,j;
@@ -70,14 +70,14 @@ void printMap(char map[ROWS][COLS], int playerRow, int playerCol) {
     }
 }
 
-// Função para movimentar o monstro em direção ao jogador de forma mais precisa
+// FunÃ§Ã£o para movimentar o monstro em direÃ§Ã£o ao jogador de forma mais precisa
 void moveMonster2(int *monsterRow, int *monsterCol, int playerRow, int playerCol) {
-    // Calcula a diferença entre as posições do monstro e do jogador
+    // Calcula a diferenÃ§a entre as posiÃ§Ãµes do monstro e do jogador
     int rowDiff = playerRow - *monsterRow;
     int colDiff = playerCol - *monsterCol;
     
 	
-    // Movimenta o monstro na direção que reduz a distância até o jogador
+    // Movimenta o monstro na direÃ§Ã£o que reduz a distÃ¢ncia atÃ© o jogador
     if (abs(rowDiff) > abs(colDiff)) {
         if (rowDiff > 0){
             
@@ -116,7 +116,7 @@ void moveMonster1(int *monsterRow, int *monsterCol){
 }
 	
 
-// Função para exibir a tela de vitória
+// FunÃ§Ã£o para exibir a tela de vitÃ³ria
 void showVictoryScreen() {
     printf("\n=== Parabens! Voce e um verdadeiro girascedor e cientista da computacao! ===\n");
     printf("Voce venceu a fase!\n");
@@ -155,7 +155,7 @@ int main() {
 			// Definindo o mapa
             char map[ROWS][COLS];
 
-            // Preenchendo o mapa com espaços em branco
+            // Preenchendo o mapa com espaÃ§os em branco
             
 			int i,j;
 			for ( i = 0; i < ROWS; ++i) {
@@ -173,11 +173,11 @@ int main() {
                 }
             }
 
-            // Posição inicial do jogador
+            // PosiÃ§Ã£o inicial do jogador
             int playerRow = 8;
             int playerCol = 7;
 
-            // Posição inicial do monstro
+            // PosiÃ§Ã£o inicial do monstro
             int monsterRow = 5;
             int monsterCol = 5;
 			int monsterOldCol;
@@ -185,17 +185,17 @@ int main() {
 			
 			
 			int wasSpike = 0;
-            // Variável para verificar se o jogo acabou
+            // VariÃ¡vel para verificar se o jogo acabou
             int gameOver = 0;
 
-            // Variável para verificar se o jogador tem a chave
+            // VariÃ¡vel para verificar se o jogador tem a chave
             int hasKey = 0;
 
-            // Variáveis para armazenar a posição da porta e da chave
+            // VariÃ¡veis para armazenar a posiÃ§Ã£o da porta e da chave
             int doorRow, doorCol, keyRow, keyCol;
 
-            // Definindo a posição da chave
-            srand(time(NULL)); // inicializar a semente para números aleatórios
+            // Definindo a posiÃ§Ã£o da chave
+            srand(time(NULL)); // inicializar a semente para nÃºmeros aleatÃ³rios
             
 			
 			do {
@@ -204,16 +204,16 @@ int main() {
             } while (map[keyRow][keyCol] != '.');
 
             // Adicionando a chave ao mapa
-            map[keyRow][keyCol] = '@'; // Chave na posição (keyRow, keyCol)
+            map[keyRow][keyCol] = '@'; // Chave na posiÃ§Ã£o (keyRow, keyCol)
 
-            // Definindo a posição da porta
+            // Definindo a posiÃ§Ã£o da porta
             do {
                 doorRow = rand() % ROWS;
                 doorCol = rand() % COLS;
             } while (map[doorRow][doorCol] != '.');
 
             // Adicionando a porta ao mapa
-            map[doorRow][doorCol] = 'D'; // Porta na posição (doorRow, doorCol)
+            map[doorRow][doorCol] = 'D'; // Porta na posiÃ§Ã£o (doorRow, doorCol)
 
             // Adicionando os espinhos ao mapa
             int spikesPlaced = 0;
@@ -230,19 +230,24 @@ int main() {
             // Loop principal do jogo
             while (!gameOver) {
                 
-				//Atualizar a posição antiga do monstro
+				//Atualizar a posiÃ§Ã£o antiga do monstro
 				map[monsterOldRow][monsterOldCol] = '.';
 				monsterOldCol = monsterCol;
 				monsterOldRow = monsterRow;
 				
+				if(wasSpike ==1){
+					map[monsterRow][monsterCol] == '#';
+					wasSpike =0;
+				}
 				
-				// Movimentar o monstro em direção ao jogador
+				// Movimentar o monstro em direÃ§Ã£o ao jogador
 				map[monsterRow][monsterCol] = 'x';
 				if(whichMonster == 1){
 					moveMonster1(&monsterRow,&monsterCol);
 					
 					if(map[monsterRow][monsterCol] == '#'){
-						wasSpike = 1;
+						monsterRow = 5;
+                    monsterCol = 5;
 					}
 					
 				}
@@ -250,7 +255,8 @@ int main() {
 					moveMonster2(&monsterRow, &monsterCol, playerRow, playerCol);
 					
 					if(map[monsterRow][monsterCol] == '#'){
-						wasSpike = 1;
+						monsterRow = 5;
+                    	monsterCol = 5;
 					}
 				}
 
@@ -269,12 +275,13 @@ int main() {
                 // Imprimir o mapa
 				
 				printMap(map, playerRow, playerCol);
-
+				printf("Era espinho %d \n",wasSpike);
 				
 				if (hasKey ==0 ){
 					map[keyRow][keyCol] = '@';
 				}
 				
+
 				
                 // Ler o input do jogador
                 char move;
@@ -295,9 +302,9 @@ int main() {
                     newCol++;
                 }
 
-                // Verificar se o movimento é válido
+                // Verificar se o movimento Ã© vÃ¡lido
                 if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLS && map[newRow][newCol] != '*' ) {
-                    // Atualizar a posição do jogador
+                    // Atualizar a posiÃ§Ã£o do jogador
                     playerRow = newRow;
                     playerCol = newCol;
 
@@ -310,10 +317,10 @@ int main() {
                         
                     }
 
-                    // Verificar se o jogador chegou à porta com a chave
+                    // Verificar se o jogador chegou Ã  porta com a chave
                     if (playerRow == doorRow && playerCol == doorCol && hasKey) {
                         
-						showVictoryScreen();getchar(); // Exibir tela de vitória
+						showVictoryScreen();getchar(); // Exibir tela de vitÃ³ria
                         // Remover a porta do mapa
                         map[playerRow][playerCol] = '.';
                         gameOver = 1;
@@ -353,3 +360,4 @@ int main() {
 
     return 0;
 }
+
