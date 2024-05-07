@@ -2,9 +2,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h> // Para a função abs()
+#include <conio.h>
+
 
 #define ROWS 10
 #define COLS 10
+#define ROWS2 20
+#define COLS2 20
+#define ROWS3 40
+#define COLS3 40
 
 // Função para exibir a lore
 void showLore() {
@@ -58,14 +64,19 @@ void printMap(char map[ROWS][COLS], int playerRow, int playerCol) {
     
 	int i,j;
 	
+	
+		printf("\n\n\n\n");
 	for (i = 0; i < ROWS; ++i) {
-        for (j = 0; j < COLS; ++j) {
-            if (i == playerRow && j == playerCol) {
+        
+			printf("\t\t\t\t\t\t");
+		for (j = 0; j < COLS; ++j) {
+			if (i == playerRow && j == playerCol) {
                 printf("& ");
             } else {
                 printf("%c ", map[i][j]);
             }
-        }
+        
+		}
         printf("\n");
     }
 }
@@ -183,8 +194,9 @@ int main() {
 			int monsterOldCol;
 			int monsterOldRow;
 			
+			//Variavel para interagir
+			int interact;
 			
-			int wasSpike = 0;
             // Variável para verificar se o jogo acabou
             int gameOver = 0;
 
@@ -192,25 +204,46 @@ int main() {
             int hasKey = 0;
 
             // Variáveis para armazenar a posição da porta e da chave
-            int doorRow, doorCol, keyRow, keyCol;
+            int doorRow, doorCol,doorWall, keyRow, keyCol;
 
             // Definindo a posição da chave
             srand(time(NULL)); // inicializar a semente para números aleatórios
             
 			
 			do {
-                keyRow = rand() % ROWS;
-                keyCol = rand() % COLS;
-            } while (map[keyRow][keyCol] != '.');
+				if(doorWall == 0){
+					keyRow = rand() % ROWS;
+		        	keyCol = rand() % COLS;
+				}
+				
+		    } while (map[keyRow][keyCol] != '.');
 
             // Adicionando a chave ao mapa
             map[keyRow][keyCol] = '@'; // Chave na posição (keyRow, keyCol)
 
             // Definindo a posição da porta
-            do {
-                doorRow = rand() % ROWS;
-                doorCol = rand() % COLS;
-            } while (map[doorRow][doorCol] != '.');
+            doorWall = 0;
+			do {
+				if(doorWall == 0){
+					doorRow = rand() % ROWS;
+                	doorCol = 0;
+				}
+				if(doorWall == 1){
+					doorRow = rand() % ROWS;
+                	doorCol = 9;
+				}
+				if(doorWall == 2){
+					doorRow = 0;
+                	doorCol = rand() % COLS;
+				}
+				if(doorWall == 3){
+					doorRow = 9;
+                	doorCol = rand() % COLS;
+				}
+				
+				
+				
+            } while (map[doorRow][doorCol] != '.' && map[doorRow][doorCol] != '*' );
 
             // Adicionando a porta ao mapa
             map[doorRow][doorCol] = 'D'; // Porta na posição (doorRow, doorCol)
@@ -235,10 +268,7 @@ int main() {
 				monsterOldCol = monsterCol;
 				monsterOldRow = monsterRow;
 				
-				if(wasSpike ==1){
-					map[monsterRow][monsterCol] == '#';
-					wasSpike =0;
-				}
+				
 				
 				// Movimentar o monstro em direção ao jogador
 				map[monsterRow][monsterCol] = 'x';
@@ -260,33 +290,34 @@ int main() {
 					}
 				}
 
-
+				
 
 				
-				//Verificar se a porta esta aberta
+				//Verificar se a porta esta aberta e se a chave esta no mapa
 				if (hasKey == 1 ){
 						map[doorRow][doorCol] = '=';
 				}else{
 						map[doorRow][doorCol] = 'D';
+						map[keyRow][keyCol] = '@';
 				}
 
 
-
                 // Imprimir o mapa
-				
+				interact = 0;
 				printMap(map, playerRow, playerCol);
 				
 				
-				if (hasKey ==0 ){
-					map[keyRow][keyCol] = '@';
+				//Manter a chave no mapa
+				if (hasKey == 1 ){
+					map[keyRow][keyCol] = '.';
 				}
 				
 
 				
                 // Ler o input do jogador
                 char move;
-                printf("Digite 'w' para cima, 'a' para esquerda, 's' para baixo, 'd' para direita: ");
-                scanf(" %c", &move);
+                printf("\t\tDigite 'w' para cima, 'a' para esquerda, 's' para baixo, 'd' para direita:\n\t\t Digite 'i' para interagir com o o mapa ");
+                move = getch();
                 system("clear || cls");
 
                 // Mover o jogador
@@ -300,7 +331,9 @@ int main() {
                     newRow++;
                 } else if (move == 'd') {
                     newCol++;
-                }
+                }else if (move == 'i'){
+                	interact = 1;
+				}
 
                 // Verificar se o movimento é válido
                 if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLS && map[newRow][newCol] != '*' ) {
@@ -308,17 +341,22 @@ int main() {
                     playerRow = newRow;
                     playerCol = newCol;
 
-                    // Verificar se o jogador encontrou a chave
-                    if (map[playerRow][playerCol] == '@') {
+                    // Remover a chave do mapa
+						if (hasKey == 1){
+							map[keyRow][keyCol] = '.';
+						}
+					
+					// Verificar se o jogador encontrou a chave
+                    if (map[playerRow][playerCol] == map[keyRow][keyCol] && interact == 1) {
                         printf("Voce encontrou a chave!\n");
                         hasKey = 1;
-                        // Remover a chave do mapa
-                        map[playerRow][playerCol] = '.';
+                        
+						
                         
                     }
 
                     // Verificar se o jogador chegou à porta com a chave
-                    if (playerRow == doorRow && playerCol == doorCol && hasKey) {
+                    if (playerRow == doorRow && playerCol == doorCol && hasKey == 1) {
                         
 						showVictoryScreen();getchar(); // Exibir tela de vitória
                         // Remover a porta do mapa
@@ -342,6 +380,7 @@ int main() {
                     map[keyRow][keyCol] = '@';
 					monsterRow = 5;
                     monsterCol = 5;
+                    interact =0;
                 }
             }
         } else if (choice == 2) {
@@ -360,4 +399,3 @@ int main() {
 
     return 0;
 }
-
