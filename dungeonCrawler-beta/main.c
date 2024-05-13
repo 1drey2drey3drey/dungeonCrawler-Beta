@@ -47,14 +47,15 @@ void showMainMenu() {
 void showTutorial() {
     system("color F");
 	system("clear || cls"); // Limpa a tela
-	printf("=== Tutorial ===\n");
-    printf("Este e voce: '&'\n");
-    printf("Seu objetivo e passar pela porta (D) para ganhar\n");
-	printf("Use as teclas 'w', 'a', 's' e 'd' para movimentar o personagem.\n");
-    printf("Encontre a chave (@) para abrir a porta.\n");
-    printf("Cuidado com os espinhos (#) e evite toca-los.\n");
-    printf("Tome cuidado com os monstros (x) eles nao sao amigaveis\n");
-    printf("Quando a porta estiver aberta (=), passe por ela para ganhar a fase\n");
+	printf("\n\t\t\t=== Tutorial ===\n");
+    printf("\tEste e voce: '&'\n");
+    printf("\tSeu objetivo e passar pela porta (D) para ganhar\n");
+	printf("\tUse as teclas 'w', 'a', 's' e 'd' para movimentar o personagem.\n");
+    printf("\tEncontre a chave (@) para abrir a porta.\n");
+    printf("\tCuidado com os espinhos (#) e evite toca-los.\n");
+    printf("\tTome cuidado com os monstros (x)(V) eles nao sao amigaveis\n");
+    printf("\tCaso precise, aperte o botao (O) para revelar a posicao da porta e chave\n");
+	printf("\tQuando a porta estiver aberta (=), passe por ela para ganhar a fase\n\n");
     
     system("pause");
 }
@@ -74,6 +75,29 @@ void printMap(char map[ROWS][COLS], int playerRow, int playerCol) {
                 printf("& ");
             } else {
                 printf("%c ", map[i][j]);
+            }
+        
+		}
+        printf("\n");
+    }
+}
+
+
+// Função para imprimir o mapa
+void printMap2(char map2[ROWS2][COLS2], int playerRow, int playerCol) {
+    
+	int i,j;
+	
+	
+		printf("\n\n\n\n");
+	for (i = 0; i < ROWS2; ++i) {
+        
+			printf("\t\t\t\t\t\t");
+		for (j = 0; j < COLS2; ++j) {
+			if (i == playerRow && j == playerCol) {
+                printf("& ");
+            } else {
+                printf("%c ", map2[i][j]);
             }
         
 		}
@@ -129,9 +153,21 @@ void moveMonster1(int *monsterRow, int *monsterCol){
 
 // Função para exibir a tela de vitória
 void showVictoryScreen() {
-    printf("\n=== Parabens! Voce e um verdadeiro girascedor e cientista da computacao! ===\n");
-    printf("Voce venceu a fase!\n");
-    printf("=====================================================================\n\n");
+    system("color A");
+	printf("\n\n\t\tParabens! Voce e um verdadeiro girascedor e cientista da computacao! \n");
+    printf("\t\tVoce venceu o jogo!\n\n\t\t");
+
+    system("pause");
+	system("clear || cls");
+}
+
+void showGameover(){
+	printf("\t\t\tVoce perdeu! :( \n\n");
+	
+	printf("\t\tVoce tocou nos espinhos ou foi pego pelo monstro! A fase sera reiniciada!.\n");
+	printf("\t\tTente novamente!\n\t");
+	system("pause");
+	system("clear || cls");
 }
 
 int main() {
@@ -145,7 +181,9 @@ int main() {
         showMainMenu();
         printf("Escolha uma opcao: ");
         scanf("%d", &choice);
-
+		
+		int fase = 1;
+		
         if (choice == 1) {
             
 			//Escolher a dificuldade do monstro
@@ -165,10 +203,16 @@ int main() {
 			system("clear || cls");
 			// Definindo o mapa
             char map[ROWS][COLS];
+            char map2[ROWS2][COLS2];
+
+            
+            //definincdo fases
+            
 
             // Preenchendo o mapa com espaços em branco
-            
-			int i,j;
+            	int i,j;
+
+				
 			for ( i = 0; i < ROWS; ++i) {
                 for ( j = 0; j < COLS; ++j) {
                     map[0][j] = '*';
@@ -183,14 +227,25 @@ int main() {
 					
                 }
             }
+            
 
             // Posição inicial do jogador
-            int playerRow = 8;
-            int playerCol = 7;
+        		int playerRow;
+        		int playerCol;
+            	if (fase == 1){
+            		 playerRow = 8;
+            		 playerCol = 7;
+				}if(fase == 2){
+					 playerRow = 18;
+            		 playerCol = 17;
+				}
+		
+
 
             // Posição inicial do monstro
-            int monsterRow = 5;
-            int monsterCol = 5;
+            int monsterRow=5;
+            int monsterCol=5;
+
 			int monsterOldCol;
 			int monsterOldRow;
 			
@@ -202,28 +257,35 @@ int main() {
 
             // Variável para verificar se o jogador tem a chave
             int hasKey = 0;
+            
+            int buttonPressed = 0;
+            int buttonRow;
+            int buttonCol;
 
             // Variáveis para armazenar a posição da porta e da chave
             int doorRow, doorCol,doorWall, keyRow, keyCol;
-
             // Definindo a posição da chave
             srand(time(NULL)); // inicializar a semente para números aleatórios
             
 			
-			do {
+
+				do {
 				if(doorWall == 0){
 					keyRow = rand() % ROWS;
 		        	keyCol = rand() % COLS;
 				}
 				
 		    } while (map[keyRow][keyCol] != '.');
+			
 
             // Adicionando a chave ao mapa
             map[keyRow][keyCol] = '@'; // Chave na posição (keyRow, keyCol)
-
+            
             // Definindo a posição da porta
-            doorWall = 0;
-			do {
+			doorWall = rand()%4 ;
+			
+
+				do {
 				if(doorWall == 0){
 					doorRow = rand() % ROWS;
                 	doorCol = 0;
@@ -241,55 +303,93 @@ int main() {
                 	doorCol = rand() % COLS;
 				}
 				
-				
-				
+				if(doorRow == 0 && doorCol == 0){
+					map[doorRow][doorCol] == 'a';
+				}
+				if(doorRow == 0 && doorCol == 9){
+					map[doorRow][doorCol] == 'a';
+				}
+				if(doorRow == 9 && doorCol == 0){
+					map[doorRow][doorCol] == 'a';
+				}
+				if(doorRow == 9 && doorCol == 9){
+					map[doorRow][doorCol] == 'a';
+				}
             } while (map[doorRow][doorCol] != '.' && map[doorRow][doorCol] != '*' );
+
+			
+			
 
             // Adicionando a porta ao mapa
             map[doorRow][doorCol] = 'D'; // Porta na posição (doorRow, doorCol)
 
             // Adicionando os espinhos ao mapa
             int spikesPlaced = 0;
-            while (spikesPlaced < 13) { // Adiciona espinhos
+            		while (spikesPlaced < 7) { // Adiciona espinhos
                 int spikeRow, spikeCol;
                 spikeRow = rand() % ROWS;
                 spikeCol = rand() % COLS;
                 if (map[spikeRow][spikeCol] == '.') {
                     map[spikeRow][spikeCol] = '#';
                     spikesPlaced++;
+                	}
+            	}
+	
+			
+
+            // Loop principal da fase 1
+            while (fase == 1 ) {
+                //manter as paredes
+            for ( i = 0; i < ROWS; ++i) {
+                for ( j = 0; j < COLS; ++j) {
+                    map[0][j] = '*';
+					map[9][j] = '*';
+					map[i][0] = '*';
+					map[i][9] = '*';
+					
                 }
             }
-
-            // Loop principal do jogo
-            while (!gameOver) {
                 
 				//Atualizar a posição antiga do monstro
-				map[monsterOldRow][monsterOldCol] = '.';
+				if(interact == 0){
+					map[monsterOldRow][monsterOldCol] = '.';
 				monsterOldCol = monsterCol;
 				monsterOldRow = monsterRow;
+				}
+				
 				
 				
 				
 				// Movimentar o monstro em direção ao jogador
-				map[monsterRow][monsterCol] = 'x';
-				if(whichMonster == 1){
-					moveMonster1(&monsterRow,&monsterCol);
-					
-					if(map[monsterRow][monsterCol] == '#'){
-						monsterRow = 5;
-                    monsterCol = 5;
+						
+					if(interact == 0){	
+						
+						if(whichMonster == 1){
+							map[monsterRow][monsterCol] = 'x';
+						}if(whichMonster == 2){
+							map[monsterRow][monsterCol] = 'V';
+						}
+						
+						if(whichMonster == 1){
+							moveMonster1(&monsterRow,&monsterCol);
+							
+							if(map[monsterRow][monsterCol] == '#'){
+								monsterRow = 5;
+		                    monsterCol = 5;
+							}
+							
+						}
+						if(whichMonster == 2){
+							moveMonster2(&monsterRow, &monsterCol, playerRow, playerCol);
+							
+							if(map[monsterRow][monsterCol] == '#'){
+								monsterRow = 5;
+		                    	monsterCol = 5;
+							}
+						}
+					}else if(interact == 1){
+						
 					}
-					
-				}
-				if(whichMonster == 2){
-					moveMonster2(&monsterRow, &monsterCol, playerRow, playerCol);
-					
-					if(map[monsterRow][monsterCol] == '#'){
-						monsterRow = 5;
-                    	monsterCol = 5;
-					}
-				}
-
 				
 
 				
@@ -300,7 +400,7 @@ int main() {
 						map[doorRow][doorCol] = 'D';
 						map[keyRow][keyCol] = '@';
 				}
-
+				
 
                 // Imprimir o mapa
 				interact = 0;
@@ -358,10 +458,9 @@ int main() {
                     // Verificar se o jogador chegou à porta com a chave
                     if (playerRow == doorRow && playerCol == doorCol && hasKey == 1) {
                         
-						showVictoryScreen();getchar(); // Exibir tela de vitória
                         // Remover a porta do mapa
                         map[playerRow][playerCol] = '.';
-                        gameOver = 1;
+                        fase = 2;
                     }
                 } else {
                     printf("Movimento invalido! Tente novamente.\n");
@@ -369,9 +468,8 @@ int main() {
                 }
 	
                 // Verificar se o jogador tocou nos espinhos
-                if (map[playerRow][playerCol] == '#' || (playerRow == monsterRow && playerCol == monsterCol)) {
-                    printf("Voce tocou nos espinhos ou foi pego pelo monstro! A fase sera reiniciada.\n");
-                    system("pause");
+                if (map[playerRow][playerCol] == '#' || (playerRow == monsterRow && playerCol == monsterCol && interact == 0)) {
+                    showGameover();
                     // Reiniciar a fase
                     playerRow = 8;
                     playerCol = 7;
@@ -381,6 +479,251 @@ int main() {
 					monsterRow = 5;
                     monsterCol = 5;
                     interact =0;
+                }
+				
+			}
+		
+		//parabens 1 fase
+		system("clear || cls");
+		printf("\nParabens, Voce passou pela fase 1!\n");
+		system("pause");
+		system("clear || cls");
+		
+			//Criar a fase 2
+			for ( i = 0; i < ROWS2; ++i) {
+                for ( j = 0; j < COLS2; ++j) {
+                    map2[0][j] = '*';
+					map2[19][j] = '*';
+					map2[i][0] = '*';
+					map2[i][19] = '*';
+					
+					if(map2[i][j] != '*')
+					{
+					map2[i][j] = '.';
+					}
+					
+                }
+            }
+				//mudar as coordenadas do monstro e player 
+				hasKey = 0;
+				monsterRow = 15;
+            	monsterCol = 15;
+			
+				playerRow = 10;
+            	playerCol = 10;
+            	//gerar butao
+					buttonRow = 1+rand() % ROWS-2;
+		        	buttonCol = 1+rand() % COLS-2;
+				
+				//mudar as coordenadas da chave 
+
+					keyRow = rand() % ROWS2;
+		        	keyCol = rand() % COLS2;
+			
+				//mudar as coordenadas da porta
+				doorWall = rand()%4;
+				do {
+				
+				if(doorWall == 0){
+					doorRow = rand() % ROWS2;
+                	doorCol = 0;
+				}
+				if(doorWall == 1){
+					doorRow = rand() % ROWS2;
+                	doorCol = 19;
+				}
+				if(doorWall == 2){
+					doorRow = 0;
+                	doorCol = rand() % COLS2;
+				}
+				if(doorWall == 3){
+					doorRow = 19;
+                	doorCol = rand() % COLS2;
+				}
+				if(doorRow == 0 && doorCol == 0){
+					map[doorRow][doorCol] == '.';
+				}
+				if(doorRow == 0 && doorCol == 19){
+					map[doorRow][doorCol] == 'a';
+				}
+				if(doorRow == 19 && doorCol == 0){
+					map[doorRow][doorCol] == 'a';
+				}
+				if(doorRow == 19 && doorCol == 19){
+					map[doorRow][doorCol] == 'a';
+				}
+            } while (map[doorRow][doorCol] != 'a' && map[doorRow][doorCol] != '*' );
+			
+				
+			map2[doorRow][doorCol] = 'D';
+				
+
+		    
+		    
+		    while (spikesPlaced < 40) { // Adiciona espinhos
+                int spikeRow, spikeCol;
+                spikeRow = rand() % ROWS2;
+                spikeCol = rand() % COLS2;
+                if (map2[spikeRow][spikeCol] == '.') {
+                    map2[spikeRow][spikeCol] = '#';
+                    spikesPlaced++;
+                	}
+            	}
+				
+				//loop fase 2
+				system("color 03");
+				while (fase == 2 ) {
+                
+                //manter as paredes
+				for ( i = 0; i < ROWS2; ++i) {
+                	for ( j = 0; j < COLS2; ++j) {
+                    map2[0][j] = '*';
+					map2[19][j] = '*';
+					map2[i][0] = '*';
+					map2[i][19] = '*';
+					
+                }
+            }
+				//Atualizar a posição antiga do monstro
+				map2[monsterOldRow][monsterOldCol] = '.';
+				monsterOldCol = monsterCol;
+				monsterOldRow = monsterRow;
+				
+				
+				
+				// Movimentar o monstro em direção ao jogador
+					
+				if(interact == 0){
+					
+					
+					if(whichMonster == 1){
+						map2[monsterRow][monsterCol] = 'x';
+					}if(whichMonster == 2){
+						map2[monsterRow][monsterCol] = 'V';
+					}
+					
+					if(whichMonster == 1){
+						moveMonster1(&monsterRow,&monsterCol);
+						
+						if(map2[monsterRow][monsterCol] == '#'){
+						monsterRow = 15;
+	                    monsterCol = 15;
+						}
+						
+					}
+					if(whichMonster == 2){
+						moveMonster2(&monsterRow, &monsterCol, playerRow, playerCol);
+						
+						if(map2[monsterRow][monsterCol] == '#'){
+							monsterRow = 15;
+	                    	monsterCol = 15;
+						}
+					}
+				}else if(interact == 1){
+				}
+				
+
+				
+				//Verificar se a porta esta aberta e se a chave esta no mapa
+				if (hasKey == 1 ){
+						map2[doorRow][doorCol] = '=';
+				}else{
+						map2[doorRow][doorCol] = 'D';
+						map2[keyRow][keyCol] = '@';
+				}
+
+				if(buttonPressed == 0){
+					map2[buttonRow][buttonCol] ='O';
+					map2[keyRow][keyCol] = '.';
+					map2[doorRow][doorCol] = '*';
+					
+					
+				}if(buttonPressed == 1){
+					map2[buttonRow][buttonCol] ='.';
+				}
+
+                // Imprimir o mapa
+				interact = 0;
+				printMap2(map2, playerRow, playerCol);
+				
+				
+				//Manter a chave no mapa
+				if (hasKey == 1 ){
+					map2[keyRow][keyCol] = '.';
+				}
+				
+
+				
+                // Ler o input do jogador
+                char move;
+                printf("\t\tDigite 'w' para cima, 'a' para esquerda, 's' para baixo, 'd' para direita:\n\t\t Digite 'i' para interagir com o o mapa ");
+                move = getch();
+                system("clear || cls");
+
+                // Mover o jogador
+                int newRow = playerRow;
+                int newCol = playerCol;
+                if (move == 'w') {
+                    newRow--;
+                } else if (move == 'a') {
+                    newCol--;
+                } else if (move == 's') {
+                    newRow++;
+                } else if (move == 'd') {
+                    newCol++;
+                }else if (move == 'i'){
+                	interact = 1;
+				}
+
+                // Verificar se o movimento é válido
+                if (newRow >= 0 && newRow < ROWS2 && newCol >= 0 && newCol < COLS2 && map2[newRow][newCol] != '*' ) {
+                    // Atualizar a posição do jogador
+                    playerRow = newRow;
+                    playerCol = newCol;
+
+					// Verificar se o jogador encontrou a chave
+                    if (map2[playerRow][playerCol] == map2[keyRow][keyCol] && interact == 1) {
+                        printf("Voce encontrou a chave!\n");
+                        hasKey = 1;
+                        
+                    }
+                    
+                    // Verificar se o jogador apertou o butao
+                    if (map2[playerRow][playerCol] == map2[buttonRow][buttonCol] && interact == 1) {
+                        printf("Voce apertou o botao!\n");
+                        buttonPressed = 1;
+                        
+                    }
+
+
+                    // Verificar se o jogador chegou à porta com a chave
+                    if (playerRow == doorRow && playerCol == doorCol && hasKey == 1) {
+
+                    map2[playerRow][playerCol] = '.';
+                    fase = 3;
+                         
+						 
+						 gameOver = 1;
+                         showVictoryScreen();getchar(); 
+                    }
+                } else {
+                    printf("Movimento invalido! Tente novamente.\n");
+                    
+                }
+	
+                // Verificar se o jogador tocou nos espinhos
+                if (map2[playerRow][playerCol] == '#' || (playerRow == monsterRow && playerCol == monsterCol && interact == 0)) {
+                    showGameover();
+                    // Reiniciar a fase
+                    playerRow = 15;
+                    playerCol = 15;
+                    hasKey = 0; // resetar a chave
+                    map2[monsterRow][monsterCol] = '.';
+                    map2[keyRow][keyCol] = '@';
+					monsterRow = 5;
+                    monsterCol = 5;
+                    buttonPressed = 0;
+					interact = 0;
                 }
             }
         } else if (choice == 2) {
